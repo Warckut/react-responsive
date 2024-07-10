@@ -1,9 +1,11 @@
-export type Resolution = `${number}${'dppx' | 'dpi' | 'dpcm'}` | number;
+import { ReactNode } from 'react';
+
+export type ResolutionType = `${number}${'dppx' | 'dpi' | 'dpcm'}` | number;
 
 export type MediaQueryParams = {
   orientation?: 'portrait' | 'landscape';
-  minResolution?: Resolution;
-  maxResolution?: Resolution;
+  minResolution?: ResolutionType;
+  maxResolution?: ResolutionType;
   minWidth?: number;
   maxWidth?: number;
   minHeight?: number;
@@ -11,5 +13,5 @@ export type MediaQueryParams = {
 };
 
 export type MediaQueryProps = MediaQueryParams & {
-  children: React.ReactNode | ((matches: boolean) => React.ReactNode);
+  children: ReactNode | ((matches: boolean) => ReactNode);
 };

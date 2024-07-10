@@ -8,12 +8,12 @@ function useMediaQuery({ query }: { query: string }) {
     (e: MediaQueryListEvent) => {
       setMatch(e.matches);
     },
-    [setMatch]
+    [setMatch],
   );
 
   useEffect(() => {
     const target = ref.current;
-    setMatch(ref.current.matches);
+    setMatch(target.matches);
     target.addEventListener('change', mathChangeHandler);
     return () => {
       target.removeEventListener('change', mathChangeHandler);
