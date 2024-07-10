@@ -31,11 +31,13 @@ function MediaQuery({ children, ...mediaQuery }: MediaQueryProps) {
   const query = useMemo(() => getQuery(mediaQuery), [mediaQuery]);
   const matches = useMediaQuery({ query });
 
+  if (!matches) return null;
+
   if (typeof children === 'function') {
     return <Fragment>{children(matches)}</Fragment>;
   }
 
-  return matches ? <Fragment>{children}</Fragment> : null;
+  return <Fragment>{children}</Fragment>;
 }
 
 export default MediaQuery;
