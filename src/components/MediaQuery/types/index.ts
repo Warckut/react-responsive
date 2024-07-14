@@ -1,9 +1,10 @@
 import { ReactNode } from 'react';
 
 export type ResolutionType = `${number}${'dppx' | 'dpi' | 'dpcm'}` | number;
+export type OrientationType = 'portrait' | 'landscape';
 
 export type MediaQueryParams = {
-  orientation?: 'portrait' | 'landscape';
+  orientation?: OrientationType;
   minResolution?: ResolutionType;
   maxResolution?: ResolutionType;
   minWidth?: number;
@@ -12,6 +13,10 @@ export type MediaQueryParams = {
   maxHeight?: number;
 };
 
-export type MediaQueryProps = MediaQueryParams & {
+export type HasAtLeastOne<T> = {
+  [K in keyof T]: Required<Pick<T, K>>;
+}[keyof T];
+
+export type MediaQueryProps = HasAtLeastOne<MediaQueryParams> & {
   children: ReactNode | ((matches: boolean) => ReactNode);
 };

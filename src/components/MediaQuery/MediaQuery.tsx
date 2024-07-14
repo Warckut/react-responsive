@@ -1,43 +1,37 @@
-import { useMemo, Fragment } from 'react';
-import useMediaQuery from '../../hooks/useMediaQuery/useMediaQuery';
-import { MediaQueryParams, MediaQueryProps, ResolutionType } from './types/index';
+import { useMemo } from 'react';
+import useMediaQuery from '../../hooks/useMediaQuery';
+import { MediaQueryParams, MediaQueryProps } from './types/index';
+import { camelToKebabCase } from './utils';
 
-function formatResolution(resolution: ResolutionType) {
-  return typeof resolution === 'number' ? `${resolution}dppx` : resolution;
-}
+const getQuery = (params: MediaQueryParams) => {
+  const result = Object.entries(params)
+    .map(([key, value]) => {
+      if (!value) return '';
 
-const getQuery = ({
-  orientation,
-  minResolution,
-  maxResolution,
-  minWidth,
-  maxWidth,
-  minHeight,
-  maxHeight,
-}: MediaQueryParams) =>
-  [
-    orientation && `(orientation: ${orientation})`,
-    minResolution && `(min-resolution: ${formatResolution(minResolution)})`,
-    maxResolution && `(max-resolution: ${formatResolution(maxResolution)})`,
-    minWidth && `(min-width: ${minWidth}px)`,
-    maxWidth && `(max-width: ${maxWidth}px)`,
-    minHeight && `(min-height: ${minHeight}px)`,
-    maxHeight && `(max-height: ${maxHeight}px)`,
-  ]
-    .filter((param) => typeof param !== 'boolean')
+      if (key === 'orientation') return `(orientation: ${value})`;
+
+      if (key === 'minResolution' || key === 'maxResolution') {
+        const resolution = typeof value === 'number' ? `${value}dppx` : value;
+        return `(${camelToKebabCase(key)}: ${resolution})`;
+      }
+
+      return `(${camelToKebabCase(key)}: ${value}px)`;
+    })
+    .filter(Boolean)
     .join(' and ');
+
+  return result;
+};
 
 function MediaQuery({ children, ...mediaQuery }: MediaQueryProps) {
   const query = useMemo(() => getQuery(mediaQuery), [mediaQuery]);
   const matches = useMediaQuery({ query });
 
-  if (!matches) return null;
-
   if (typeof children === 'function') {
-    return <Fragment>{children(matches)}</Fragment>;
+    return <>{children(matches)}</>;
   }
 
-  return <Fragment>{children}</Fragment>;
+  return <>{matches && children}</>;
 }
 
 export default MediaQuery;

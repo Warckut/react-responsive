@@ -1,24 +1,21 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function useMediaQuery({ query }: { query: string }) {
-  const ref = useRef(window.matchMedia(query));
   const [match, setMatch] = useState<boolean>(false);
 
-  const mathChangeHandler = useCallback(
-    (e: MediaQueryListEvent) => {
-      setMatch(e.matches);
-    },
-    [setMatch],
-  );
-
   useEffect(() => {
-    const target = ref.current;
+    if (typeof window === 'undefined') return;
+
+    const mathChangeHandler = (e: MediaQueryListEvent) => setMatch(e.matches);
+
+    const target = window.matchMedia(query);
     setMatch(target.matches);
+
     target.addEventListener('change', mathChangeHandler);
     return () => {
       target.removeEventListener('change', mathChangeHandler);
     };
-  }, [mathChangeHandler, ref]);
+  }, [setMatch, query]);
 
   return match;
 }
