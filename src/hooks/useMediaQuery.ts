@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 function useMediaQuery({ query }: { query: string }) {
-  const [match, setMatch] = useState<boolean>(false);
+  const [match, setMatch] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;

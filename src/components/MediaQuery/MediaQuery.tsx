@@ -3,7 +3,7 @@ import useMediaQuery from '../../hooks/useMediaQuery';
 import { MediaQueryParams, MediaQueryProps } from './types/index';
 import { camelToKebabCase } from './utils';
 
-const getQuery = (params: MediaQueryParams) => {
+function getQuery(params: MediaQueryParams) {
   const result = Object.entries(params)
     .map(([key, value]) => {
       if (!value) return '';
