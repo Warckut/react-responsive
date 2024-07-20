@@ -13,7 +13,9 @@ export type MediaQueryParams = {
   maxHeight?: number;
 };
 
-export type NotEmpty<T> = T extends Record<string, never> ? never : T;
+export type NotEmpty<T> = {
+  [K in keyof Required<T>]?: Pick<Required<T>, K> & Pick<T, Exclude<keyof T, K>>;
+}[keyof T];
 
 export type MediaQueryProps = NotEmpty<MediaQueryParams> & {
   children: ReactNode | ((matches: boolean) => ReactNode);
